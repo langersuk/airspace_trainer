@@ -1,0 +1,24 @@
+/* #danger-areas polygon {
+    transition: all .2s ease-in-out; 
+} */
+
+#danger-areas polygon:hover{
+    fill-opacity: 1;
+}
+
+#danger-areas polygon {
+    fill-opacity: 0.2;
+    fill: red;
+}
+
+.class-a {
+    fill: blue;
+}
+
+.class-d {
+    fill: green;
+}
+
+.class-e {
+    fill: cyan;
+}

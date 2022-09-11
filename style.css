@@ -1,0 +1,18 @@
+#options {
+    position: fixed;
+}
+
+.svg {
+    position: absolute;
+}
+
+#tooltip {
+    pointer-events:none; /*let mouse events pass through*/
+    transition: opacity 0.3s;
+    text-shadow:1px 1px 0px gray;
+    background: lightblue;
+    border:solid gray;
+    position: absolute;
+    max-width: 8em;
+    text-align:center;
+}

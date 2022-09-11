@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Airspace</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <object class="svg" id="uk" data="uk.svg" type="image/svg+xml"></object>
+    <object class="svg" id="airspace" data="airspace.svg" type="image/svg+xml"></object>
+    <div id="options">
+      <input type="number" name="height" id="height"><br>
+      <div>
+        <input type="checkbox" id="danger_areas" name="danger_areas" value="danger-areas" checked="true">
+        <label for="danger_areas"> Danger Areas</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="aar" name="aar" value="aar" checked="true">
+        <label for="aar">AAR</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="tras" name="tras" value="tras" checked="true">
+        <label for="tras">TRAs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="orbits" name="orbits" value="orbits" checked="true">
+        <label for="orbits">AEW Orbits</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="ACCs" name="ACCs" value="ACCs" checked="true">
+        <label for="ACCs">ACCs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="CTAs" name="CTAs" value="CTAs" checked="true">
+        <label for="CTAs">CTAs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="CTZs" name="CTZs" value="CTZs" checked="true">
+        <label for="CTZs">CTZs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="FIRs" name="FIRs" value="FIRs" checked="true">
+        <label for="FIRs">FIRs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="OCAs" name="OCAs" value="OCAs" checked="true">
+        <label for="OCAs">OCAs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="Radars" name="Radars" value="Radars" checked="true">
+        <label for="Radars">Radars</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="TCAs" name="TCAs" value="TCAs" checked="true">
+        <label for="TCAs">TCAs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="UIRs" name="UIRs" value="UIRs" checked="true">
+        <label for="UIRs">UIRs</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="Others" name="Others" value="Others" checked="true">
+        <label for="Others">Others</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="air-routes" name="air-routes" value="air-routes" checked="true">
+        <label for="air-routes">Air Routes</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="airfields" name="airfields" value="airfields" checked="true">
+        <label for="airfields">Airfields</label><br>
+      </div>
+      <div>
+        <input type="checkbox" id="waypoints" name="waypoints" value="waypoints" checked="true">
+        <label for="waypoints">Waypoints</label><br>
+      </div>
+    </div>
+    <div id="tooltip" style="opacity: 0;">Mouse-tracking HTML Tip</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.3.10/d3.min.js"></script>
+	<script src="index.js"></script>
+  </body>
+</html>
