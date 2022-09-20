@@ -1,53 +1,64 @@
 var airspace = document.querySelector("object#airspace");
 var elements;
-var input = document.querySelector("input");
-input.addEventListener("input", updateValue);
-// const dangerAreas = document.getElementById("danger_areas")
-// dangerAreas.addEventListener("input", toggleOverlay)
-// const aar = document.getElementById("aar")
-// aar.addEventListener("input", toggleOverlay)
-// const tras = document.getElementById("tras")
-// tras.addEventListener("input", toggleOverlay)
-var overlays = document.querySelectorAll('#options > div > input');
-for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
-    var overlay = overlays_1[_i];
-    console.log(overlay);
-    overlay.addEventListener("input", toggleOverlay);
-}
+/**SVG is not available until the window has loaded */
 window.onload = function () {
-    /**SVG is not available until the window has loaded */
-    elements = airspace.contentWindow.document.querySelectorAll("polygon");
+    elements = airspace.contentWindow.document.querySelectorAll("polygon, path, circle");
     showTooltip();
 };
-function toggleOverlay(e) {
-    airspace.contentWindow.document.getElementById(e.target.value).style.display = e.target.checked ? "" : "none";
+/**Overlay toggle */
+var overlays = document.querySelectorAll("#options > div > input");
+for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
+    var overlay = overlays_1[_i];
+    overlay.addEventListener("input", toggleOverlay);
 }
+function toggleOverlay(e) {
+    airspace.contentWindow.document.getElementById(e.target.value).style.display =
+        e.target.checked ? "" : "none";
+}
+/**Height selector */
+var input = document.querySelector("input");
+input.addEventListener("input", updateValue);
 function updateValue() {
-    var height = input.value;
+    var height = +input.value;
     for (var _i = 0, elements_1 = elements; _i < elements_1.length; _i++) {
-        var element = elements_1[_i];
-        if (element.dataset.min || element.dataset.max) {
-            console.log(height, element.dataset.min, element.dataset.max);
-            if (element.dataset.min > height || element.dataset.max < height) {
-                element.setAttribute("display", "none");
+        var el = elements_1[_i];
+        if (el.dataset.min && el.dataset.max) {
+            if (+el.dataset.min > height || +el.dataset.max < height) {
+                el.setAttribute("display", "none");
             }
             else {
-                console.log("here");
-                element.removeAttribute("display");
+                el.setAttribute("display", "");
             }
         }
     }
 }
+/**Mouse-over tooltip */
 function showTooltip() {
     var tooltip = document.getElementById("tooltip");
-    for (var _i = 0, elements_2 = elements; _i < elements_2.length; _i++) {
-        var el = elements_2[_i];
-        el.addEventListener("mouseover", over);
+    var _loop_1 = function (el) {
+        el.addEventListener("mouseover", function () {
+            over(el);
+        });
         el.addEventListener("mousemove", move);
         el.addEventListener("mouseout", out);
+    };
+    for (var _i = 0, elements_2 = elements; _i < elements_2.length; _i++) {
+        var el = elements_2[_i];
+        _loop_1(el);
     }
-    function over() {
+    function over(el) {
+        var fillin = "\n";
+        if (el.dataset["class"]) {
+            fillin = "".concat(fillin, "Class: ").concat(el.dataset["class"], "\n");
+        }
+        if (el.dataset.type) {
+            fillin = "".concat(fillin, "Type: ").concat(el.dataset.type, "\n");
+        }
         tooltip.style.opacity = "0.6";
+        tooltip.innerText =
+            el.id + fillin + el.dataset.lower + "-" + el.dataset.upper;
+        if (el.dataset.lower) {
+        }
     }
     function move(e) {
         tooltip.style.left = "".concat(Math.max(0, e.pageX - 150), "px");

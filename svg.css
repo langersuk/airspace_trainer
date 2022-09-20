@@ -1,24 +1,32 @@
-/* #danger-areas polygon {
+#danger-areas {
     transition: all .2s ease-in-out; 
-} */
-
-#danger-areas polygon:hover{
-    fill-opacity: 1;
-}
-
-#danger-areas polygon {
-    fill-opacity: 0.2;
+    stroke: rgb(99, 25, 26);
     fill: red;
+    stroke-width: 0.5;
 }
 
-.class-a {
+#CTAs,
+#CTZs,
+#TCAs,
+#danger-areas {
+    fill-opacity: 0.1;
+}
+
+#CTAs :hover,
+#CTZs :hover,
+#TCAs :hover,
+#danger-areas :hover {
+    fill-opacity: 0.5;
+}
+
+[data-class="A"] {
     fill: blue;
 }
 
-.class-d {
+[data-class="D"] {
     fill: green;
 }
 
-.class-e {
+[data-class="E"] {
     fill: cyan;
 }
