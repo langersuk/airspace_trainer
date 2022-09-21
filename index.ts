@@ -1,4 +1,5 @@
 const airspace: HTMLObjectElement = document.querySelector("object#airspace");
+const uk: HTMLObjectElement = document.querySelector("object#uk");
 var elements: NodeListOf<SVGPolygonElement | SVGPathElement | SVGCircleElement>;
 
 /**SVG is not available until the window has loaded */
@@ -7,6 +8,29 @@ window.onload = () => {
     "polygon, path, circle"
   );
   showTooltip();
+  uk.contentWindow.document.getElementById('test').append(airspace.contentWindow.document.getElementById('test2'))
+  // var instance = panzoom(airspace.contentWindow.document.getElementById('test'));
+  airspace.style.display = "none"
+  var instance = panzoom(uk.contentWindow.document.getElementById('test'), {
+    beforeMouseDown: function(e) {
+      // `e` - is current touch event.
+      console.log("heer")
+      return false; // tells the library to not preventDefault.
+    }
+  });
+  instance.on('panstart', function(e) {
+    console.log('Fired when pan is just started ', e);
+    // Note: e === instance.
+  });
+  
+  instance.on('pan', function(e) {
+    console.log('Fired when the `element` is being panned', e);
+  });
+  
+  instance.on('panend', function(e) {
+    console.log('Fired when pan ended', e);
+  });
+
 };
 
 /**Overlay toggle */

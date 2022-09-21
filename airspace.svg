@@ -1,6 +1,7 @@
 <?xml-stylesheet type="text/css" href="svg.css" ?> <svg viewBox="0 0 784.225 1046" xmlns="http://www.w3.org/2000/svg">
 <defs><pattern id="aar-pattern" x="0" y="0" width="0.3" height="0.3" patternUnits="userSpaceOnUse"><circle cx="0.1" cy="0.1" r="0.1" fill="rgb(50, 46, 42)"></circle></pattern><polygon id="waypoint-pattern" x="-0.5" y="-0.25" width="2" height="1" stroke="rgb(80,80,80)" stroke-width="0.1" fill="transparent" points="0,-0.25 0.5,0.5 -0.5,0.5"/><rect id="airfield-pattern" x="-0.5" y="-0.5" width="1" height="1" stroke="rgb(80,80,80)" stroke-width="0.1" fill="transparent"/></defs>
 <style>text {fill: rgb(80, 80, 80); font-family: Arial, sans-serif; font-size: 2px; white-space: pre; }</style>
+<g id="test2">
 <!-- AAR -->
 <g id="aar" fill="url(#aar-pattern)">
 <polygon data-lower="FL120" data-upper="FL280" data-min="120" data-max="280" id="AARA1" points="346.055 260.217 346.055 430.653 317.009 430.653 317.009 260.217" vector-effect="non-scaling-stroke"></polygon>
@@ -4314,5 +4315,5 @@
 <text x="344.088" y="840.073">Zeddo</text>
 </g>
 </g>
-
+</g>
 </svg>
