@@ -5,26 +5,7 @@ var elements;
 window.onload = function () {
     elements = airspace.contentWindow.document.querySelectorAll("polygon, path, circle");
     showTooltip();
-    uk.contentWindow.document.getElementById('test').append(airspace.contentWindow.document.getElementById('test2'));
-    // var instance = panzoom(airspace.contentWindow.document.getElementById('test'));
-    airspace.style.display = "none";
-    var instance = panzoom(uk.contentWindow.document.getElementById('test'), {
-        beforeMouseDown: function (e) {
-            // `e` - is current touch event.
-            console.log("heer");
-            return false; // tells the library to not preventDefault.
-        }
-    });
-    instance.on('panstart', function (e) {
-        console.log('Fired when pan is just started ', e);
-        // Note: e === instance.
-    });
-    instance.on('pan', function (e) {
-        console.log('Fired when the `element` is being panned', e);
-    });
-    instance.on('panend', function (e) {
-        console.log('Fired when pan ended', e);
-    });
+    panzoom();
 };
 /**Overlay toggle */
 var overlays = document.querySelectorAll("#options > div > input");
@@ -87,5 +68,93 @@ function showTooltip() {
     }
     function out() {
         tooltip.style.opacity = "0";
+    }
+}
+function panzoom() {
+    var transformMatrix = [1, 0, 0, 1, 0, 0];
+    var svgAirspace = airspace.contentWindow.document.querySelector("svg");
+    var svgUK = uk.contentWindow.document.querySelector("svg");
+    var viewbox = svgAirspace.getAttributeNS(null, "viewBox").split(" ");
+    var centerX = parseFloat(viewbox[2]) / 2;
+    var centerY = parseFloat(viewbox[3]) / 2;
+    var matrixGroupAirspace = svgAirspace.querySelector("g");
+    var matrixGroupUK = svgUK.querySelector("g");
+    var offset, transformAirspace, transformUK;
+    var panning = false;
+    airspace.contentWindow.document.addEventListener("wheel", zoom);
+    airspace.contentWindow.document.addEventListener("mousedown", startDrag);
+    airspace.contentWindow.document.addEventListener("mousemove", drag);
+    airspace.contentWindow.document.addEventListener("mouseup", endDrag);
+    airspace.contentWindow.document.addEventListener("mouseleave", endDrag);
+    function startDrag(evt) {
+        panning = true;
+        offset = getMousePosition(evt);
+        // Get all the transforms currently on this element
+        var transformsAirspace = matrixGroupAirspace.transform.baseVal;
+        // Ensure the first transform is a translate transform
+        if (transformsAirspace.length === 0 ||
+            transformsAirspace.getItem(0).type !==
+                SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+            // Create an transform that translates by (0, 0)
+            var translateAispace = svgAirspace.createSVGTransform();
+            translateAispace.setTranslate(0, 0);
+            // Add the translation to the front of the transforms list
+            matrixGroupAirspace.transform.baseVal.insertItemBefore(translateAispace, 0);
+        }
+        // Get initial translation amount
+        transformAirspace = transformsAirspace.getItem(0);
+        // Get all the transforms currently on this element
+        var transformsUK = matrixGroupUK.transform.baseVal;
+        // Ensure the first transform is a translate transform
+        if (transformsUK.length === 0 ||
+            transformsUK.getItem(0).type !==
+                SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+            // Create an transform that translates by (0, 0)
+            var translateUK = svgUK.createSVGTransform();
+            translateUK.setTranslate(0, 0);
+            // Add the translation to the front of the transforms list
+            matrixGroupUK.transform.baseVal.insertItemBefore(translateUK, 0);
+        }
+        // Get initial translation amount
+        transformUK = transformsUK.getItem(0);
+        offset.x -= transformAirspace.matrix.e;
+        offset.y -= transformAirspace.matrix.f;
+    }
+    function drag(evt) {
+        if (panning) {
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            transformAirspace.setTranslate(coord.x - offset.x, coord.y - offset.y);
+            transformUK.setTranslate(coord.x - offset.x, coord.y - offset.y);
+        }
+    }
+    function endDrag(evt) {
+        panning = false;
+    }
+    function getMousePosition(evt) {
+        var CTM = svgAirspace.getScreenCTM();
+        return {
+            x: (evt.clientX - CTM.e) / CTM.a,
+            y: (evt.clientY - CTM.f) / CTM.d
+        };
+    }
+    function pan(dx, dy) {
+        transformMatrix[4] += dx;
+        transformMatrix[5] += dy;
+        var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+        matrixGroupAirspace.setAttributeNS(null, "transform", newMatrix);
+        matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
+    }
+    function zoom(evt) {
+        var scale = evt.deltaY < 0 ? 1.25 : 0.8;
+        for (var i = 0; i < 4; i++) {
+            transformMatrix[i] *= scale;
+        }
+        // var offset = getMousePosition(evt)
+        // transformMatrix[4] += (1 - scale) * centerX;
+        // transformMatrix[5] += (1 - scale) * centerY;
+        var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+        svgAirspace.setAttributeNS(null, "transform", newMatrix);
+        svgUK.setAttributeNS(null, "transform", newMatrix);
     }
 }
