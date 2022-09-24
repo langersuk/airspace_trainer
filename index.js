@@ -6,7 +6,13 @@ window.onload = function () {
     elements = airspace.contentWindow.document.querySelectorAll("polygon, path, circle");
     showTooltip();
     panzoom();
+    showSliderValue();
+    updateValue();
+    hideTDA597();
 };
+function hideTDA597() {
+    airspace.contentWindow.document.getElementById("EGD597").remove();
+}
 /**Overlay toggle */
 var overlays = document.querySelectorAll("#options > div > input");
 for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
@@ -14,14 +20,65 @@ for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
     overlay.addEventListener("input", toggleOverlay);
 }
 function toggleOverlay(e) {
+    console.log(e.target.value);
     airspace.contentWindow.document.getElementById(e.target.value).style.display =
         e.target.checked ? "" : "none";
 }
+function toggleCDR(e) {
+    for (var _i = 0, _a = [
+        "TAY CTA SECTOR 3",
+        "TAY CTA SECTOR 4",
+        "TAY CTA SECTOR 5",
+        "TAY CTA SECTOR 10",
+        "TAY CTA SECTOR 11",
+        "TAY CTA SECTOR 12",
+        "TAY CTA SECTOR 13",
+        "BORDERS CTA SECTOR 12",
+        "BORDERS CTA SECTOR 13",
+        "BORDERS CTA SECTOR 14",
+        "FORTH CTA SECTOR 2",
+        "FORTH CTA SECTOR 3",
+    ]; _i < _a.length; _i++) {
+        var el = _a[_i];
+        console.log(el);
+        airspace.contentWindow.document.getElementById(el).style.display = e.target
+            .checked
+            ? ""
+            : "none";
+    }
+}
 /**Height selector */
-var input = document.querySelector("input");
-input.addEventListener("input", updateValue);
+var rangeSlider = document.querySelector("#rs-range-line");
+rangeSlider.addEventListener("input", updateValue);
+rangeSlider.addEventListener("input", showSliderValue);
+document.addEventListener("keydown", onKeyDown);
+function onKeyDown(e) {
+    console.log(e);
+    switch (e.key) {
+        case "ArrowDown":
+            rangeSlider.value = (+rangeSlider.value - 5).toString();
+            rangeSlider.dispatchEvent(new Event("input"));
+            break;
+        case "ArrowUp":
+            rangeSlider.value = (+rangeSlider.value + 5).toString();
+            rangeSlider.dispatchEvent(new Event("input"));
+            break;
+        default:
+            break;
+    }
+}
+var rangeBullet = document.getElementById("rs-bullet");
+function showSliderValue() {
+    rangeBullet.innerHTML = rangeSlider.value;
+    var bulletPosition = +rangeSlider.value / +rangeSlider.max;
+    rangeBullet.style.top =
+        document.documentElement.clientHeight -
+            35 -
+            bulletPosition * (document.documentElement.clientHeight - 35) +
+            "px";
+}
 function updateValue() {
-    var height = +input.value;
+    var height = +rangeSlider.value;
     for (var _i = 0, elements_1 = elements; _i < elements_1.length; _i++) {
         var el = elements_1[_i];
         if (el.dataset.min && el.dataset.max) {
@@ -107,8 +164,7 @@ function panzoom() {
         var transformsUK = matrixGroupUK.transform.baseVal;
         // Ensure the first transform is a translate transform
         if (transformsUK.length === 0 ||
-            transformsUK.getItem(0).type !==
-                SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+            transformsUK.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
             // Create an transform that translates by (0, 0)
             var translateUK = svgUK.createSVGTransform();
             translateUK.setTranslate(0, 0);
@@ -138,13 +194,13 @@ function panzoom() {
             y: (evt.clientY - CTM.f) / CTM.d
         };
     }
-    function pan(dx, dy) {
-        transformMatrix[4] += dx;
-        transformMatrix[5] += dy;
-        var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
-        matrixGroupAirspace.setAttributeNS(null, "transform", newMatrix);
-        matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
-    }
+    // function pan(dx, dy) {
+    //   transformMatrix[4] += dx;
+    //   transformMatrix[5] += dy;
+    //   var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+    //   matrixGroupAirspace.setAttributeNS(null, "transform", newMatrix);
+    //   matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
+    // }
     function zoom(evt) {
         var scale = evt.deltaY < 0 ? 1.25 : 0.8;
         for (var i = 0; i < 4; i++) {

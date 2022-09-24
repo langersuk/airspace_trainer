@@ -9,7 +9,14 @@ window.onload = () => {
   );
   showTooltip();
   panzoom();
+  showSliderValue();
+  updateValue();
+  hideTDA597();
 };
+
+function hideTDA597() {
+  airspace.contentWindow.document.getElementById("EGD597").remove();
+}
 
 /**Overlay toggle */
 const overlays: NodeListOf<HTMLDivElement> = document.querySelectorAll(
@@ -20,16 +27,70 @@ for (const overlay of overlays) {
 }
 
 function toggleOverlay(e) {
+  console.log(e.target.value);
   airspace.contentWindow.document.getElementById(e.target.value).style.display =
     e.target.checked ? "" : "none";
 }
 
+function toggleCDR(e) {
+  for (const el of [
+    "TAY CTA SECTOR 3",
+    "TAY CTA SECTOR 4",
+    "TAY CTA SECTOR 5",
+    "TAY CTA SECTOR 10",
+    "TAY CTA SECTOR 11",
+    "TAY CTA SECTOR 12",
+    "TAY CTA SECTOR 13",
+    "BORDERS CTA SECTOR 12",
+    "BORDERS CTA SECTOR 13",
+    "BORDERS CTA SECTOR 14",
+    "FORTH CTA SECTOR 2",
+    "FORTH CTA SECTOR 3",
+  ]) {
+    console.log(el);
+    airspace.contentWindow.document.getElementById(el).style.display = e.target
+      .checked
+      ? ""
+      : "none";
+  }
+}
+
 /**Height selector */
-const input = document.querySelector("input");
-input.addEventListener("input", updateValue);
+const rangeSlider = <HTMLInputElement>document.querySelector("#rs-range-line");
+rangeSlider.addEventListener("input", updateValue);
+rangeSlider.addEventListener("input", showSliderValue);
+document.addEventListener("keydown", onKeyDown);
+
+function onKeyDown(e) {
+  console.log(e);
+  switch (e.key) {
+    case "ArrowDown":
+      rangeSlider.value = (+rangeSlider.value - 5).toString();
+      rangeSlider.dispatchEvent(new Event("input"));
+      break;
+    case "ArrowUp":
+      rangeSlider.value = (+rangeSlider.value + 5).toString();
+      rangeSlider.dispatchEvent(new Event("input"));
+      break;
+    default:
+      break;
+  }
+}
+
+var rangeBullet = <HTMLSpanElement>document.getElementById("rs-bullet");
+
+function showSliderValue() {
+  rangeBullet.innerHTML = rangeSlider.value;
+  var bulletPosition = +rangeSlider.value / +rangeSlider.max;
+  rangeBullet.style.top =
+    document.documentElement.clientHeight -
+    35 -
+    bulletPosition * (document.documentElement.clientHeight - 35) +
+    "px";
+}
 
 function updateValue() {
-  const height = +input.value;
+  const height = +rangeSlider.value;
   for (const el of elements) {
     if (el.dataset.min && el.dataset.max) {
       if (+el.dataset.min > height || +el.dataset.max < height) {
@@ -123,17 +184,13 @@ function panzoom() {
     // Ensure the first transform is a translate transform
     if (
       transformsUK.length === 0 ||
-      transformsUK.getItem(0).type !==
-        SVGTransform.SVG_TRANSFORM_TRANSLATE
+      transformsUK.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE
     ) {
       // Create an transform that translates by (0, 0)
       var translateUK = svgUK.createSVGTransform();
       translateUK.setTranslate(0, 0);
       // Add the translation to the front of the transforms list
-      matrixGroupUK.transform.baseVal.insertItemBefore(
-        translateUK,
-        0
-      );
+      matrixGroupUK.transform.baseVal.insertItemBefore(translateUK, 0);
     }
     // Get initial translation amount
     transformUK = transformsUK.getItem(0);
@@ -160,14 +217,14 @@ function panzoom() {
     };
   }
 
-  function pan(dx, dy) {
-    transformMatrix[4] += dx;
-    transformMatrix[5] += dy;
+  // function pan(dx, dy) {
+  //   transformMatrix[4] += dx;
+  //   transformMatrix[5] += dy;
 
-    var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
-    matrixGroupAirspace.setAttributeNS(null, "transform", newMatrix);
-    matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
-  }
+  //   var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+  //   matrixGroupAirspace.setAttributeNS(null, "transform", newMatrix);
+  //   matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
+  // }
   function zoom(evt: WheelEvent) {
     const scale = evt.deltaY < 0 ? 1.25 : 0.8;
     for (var i = 0; i < 4; i++) {

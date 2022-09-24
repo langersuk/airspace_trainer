@@ -9,7 +9,7 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "es2020",
-    "lib": ["es2018", "dom", "DOM.Iterable"],
+    "lib": ["es2020", "dom", "DOM.Iterable"],
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
