@@ -47,7 +47,6 @@ function toggleCDR(e) {
     "FORTH CTA SECTOR 2",
     "FORTH CTA SECTOR 3",
   ]) {
-    console.log(el);
     airspace.contentWindow.document.getElementById(el).style.display = e.target
       .checked
       ? ""
@@ -62,7 +61,6 @@ rangeSlider.addEventListener("input", showSliderValue);
 document.addEventListener("keydown", onKeyDown);
 
 function onKeyDown(e) {
-  console.log(e);
   switch (e.key) {
     case "ArrowDown":
       rangeSlider.value = (+rangeSlider.value - 5).toString();
