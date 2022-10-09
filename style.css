@@ -33,6 +33,20 @@ body {
   position: absolute;
   bottom: 0;
 }
+
+#zoom-controls {
+  position: fixed;
+  right: 80px;
+  font-size: 3em;
+  user-select: none;
+}
+
+#zoom-out,
+#zoom-in {
+  user-select: none;
+  cursor: pointer;
+}
+
 .slider-wrapper {
   position: fixed;
   display: inline-block;

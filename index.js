@@ -12,20 +12,26 @@ window.onload = function () {
     getVersion();
 };
 function getVersion() {
-    var cycle = airspace.contentWindow.document.querySelector('svg').getAttribute('data-cycle');
-    var expirationDate = +airspace.contentWindow.document.querySelector('svg').getAttribute('data-date');
+    var cycle = airspace.contentWindow.document
+        .querySelector("svg")
+        .getAttribute("data-cycle");
+    var expirationDate = +airspace.contentWindow.document
+        .querySelector("svg")
+        .getAttribute("data-date");
     document.querySelector("#version>h2").textContent = "v:".concat(cycle);
     var colour;
     if (expirationDate > Date.now() / 1000) {
         colour = "rgba(0,255,0,0.5)";
     }
-    else if (expirationDate > (Date.now() / 1000 - 180 * 86400)) {
+    else if (expirationDate > Date.now() / 1000 - 180 * 86400) {
         colour = "rgba(255,255,0,0.5)";
     }
     else {
         colour = "rgba(255,0,0,0.5)";
     }
-    document.querySelector("#version>h2").setAttribute('style', "background: ".concat(colour));
+    document
+        .querySelector("#version>h2")
+        .setAttribute("style", "background: ".concat(colour));
 }
 function hideTDA597() {
     airspace.contentWindow.document.getElementById("EGD597").remove();
@@ -37,7 +43,6 @@ for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
     overlay.addEventListener("input", toggleOverlay);
 }
 function toggleOverlay(e) {
-    console.log(e.target.value);
     airspace.contentWindow.document.getElementById(e.target.value).style.display =
         e.target.checked ? "" : "none";
 }
@@ -50,11 +55,38 @@ function toggleCDR(e) {
         "TAY CTA SECTOR 11",
         "TAY CTA SECTOR 12",
         "TAY CTA SECTOR 13",
+        "BORDERS CTA SECTOR 8",
         "BORDERS CTA SECTOR 12",
         "BORDERS CTA SECTOR 13",
         "BORDERS CTA SECTOR 14",
         "FORTH CTA SECTOR 2",
         "FORTH CTA SECTOR 3",
+        "HOLYHEAD CTA SECTOR 9",
+        "HOLYHEAD CTA SECTOR 19",
+        "HOLYHEAD CTA SECTOR 20",
+        "HOLYHEAD CTA SECTOR 21",
+        "PORTSMOUTH CTA SECTOR 11",
+        "PORTSMOUTH CTA SECTOR 13",
+        "PORTSMOUTH CTA SECTOR 15",
+        "PORTSMOUTH CTA SECTOR 17",
+        "PORTSMOUTH CTA SECTOR 18",
+        "BERRY HEAD CTA SECTOR 2",
+        "BERRY HEAD CTA SECTOR 4",
+        "NITON CTA SECTOR 2",
+        "YORKSHIRE CTA SECTOR 15",
+        "YORKSHIRE CTA SECTOR 16",
+        "COTSWOLD CTA SECTOR 15",
+        "COTSWOLD CTA SECTOR 16",
+        "COTSWOLD CTA SECTOR 17",
+        "COTSWOLD CTA SECTOR 18",
+        "BIRMINGHAM CTA SECTOR 10",
+        "EAST MIDLANDS CTA SECTOR 14",
+        "MORAY CTA SECTOR 12",
+        "MORAY CTA SECTOR 13",
+        "IRISH SEA CTA SECTOR 3",
+        "IRISH SEA CTA SECTOR 4",
+        "IRISH SEA CTA SECTOR 6",
+        "IRISH SEA CTA SECTOR 7",
     ]; _i < _a.length; _i++) {
         var el = _a[_i];
         airspace.contentWindow.document.getElementById(el).style.display = e.target
@@ -224,6 +256,29 @@ function panzoom() {
         // var offset = getMousePosition(evt)
         // transformMatrix[4] += (1 - scale) * centerX;
         // transformMatrix[5] += (1 - scale) * centerY;
+        var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+        svgAirspace.setAttributeNS(null, "transform", newMatrix);
+        svgUK.setAttributeNS(null, "transform", newMatrix);
+    }
+    /**Manual Zoom selector */
+    var zoomIn = document.querySelector("#zoom-in");
+    zoomIn.addEventListener("click", zoomin);
+    function zoomin() {
+        var scale = 1.25;
+        for (var i = 0; i < 4; i++) {
+            transformMatrix[i] *= scale;
+        }
+        var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
+        svgAirspace.setAttributeNS(null, "transform", newMatrix);
+        svgUK.setAttributeNS(null, "transform", newMatrix);
+    }
+    var zoomOut = document.querySelector("#zoom-out");
+    zoomOut.addEventListener("click", zoomout);
+    function zoomout() {
+        var scale = 0.8;
+        for (var i = 0; i < 4; i++) {
+            transformMatrix[i] *= scale;
+        }
         var newMatrix = "matrix(" + transformMatrix.join(" ") + ")";
         svgAirspace.setAttributeNS(null, "transform", newMatrix);
         svgUK.setAttributeNS(null, "transform", newMatrix);
