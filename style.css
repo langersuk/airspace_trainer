@@ -29,6 +29,10 @@ body {
   text-align: center;
 }
 
+#version {
+  position: absolute;
+  bottom: 0;
+}
 .slider-wrapper {
   position: fixed;
   display: inline-block;

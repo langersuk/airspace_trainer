@@ -9,7 +9,24 @@ window.onload = function () {
     showSliderValue();
     updateValue();
     hideTDA597();
+    getVersion();
 };
+function getVersion() {
+    var cycle = airspace.contentWindow.document.querySelector('svg').getAttribute('data-cycle');
+    var expirationDate = +airspace.contentWindow.document.querySelector('svg').getAttribute('data-date');
+    document.querySelector("#version>h2").textContent = "v:".concat(cycle);
+    var colour;
+    if (expirationDate > Date.now() / 1000) {
+        colour = "rgba(0,255,0,0.5)";
+    }
+    else if (expirationDate > (Date.now() / 1000 - 180 * 86400)) {
+        colour = "rgba(255,255,0,0.5)";
+    }
+    else {
+        colour = "rgba(255,0,0,0.5)";
+    }
+    document.querySelector("#version>h2").setAttribute('style', "background: ".concat(colour));
+}
 function hideTDA597() {
     airspace.contentWindow.document.getElementById("EGD597").remove();
 }
