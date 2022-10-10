@@ -4,6 +4,7 @@ var elements: NodeListOf<SVGPolygonElement | SVGPathElement | SVGCircleElement>;
 
 /**SVG is not available until the window has loaded */
 window.onload = () => {
+  airspace.contentWindow.document.querySelector('svg').style.touchAction = "none"
   elements = airspace.contentWindow.document.querySelectorAll(
     "polygon, path, circle"
   );
@@ -152,11 +153,11 @@ function updateValue() {
 function showTooltip() {
   var tooltip = document.getElementById("tooltip");
   for (const el of elements) {
-    el.addEventListener("mouseover", function () {
+    el.addEventListener("pointerover", function () {
       over(el);
     });
-    el.addEventListener("mousemove", move);
-    el.addEventListener("mouseout", out);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerout", out);
   }
 
   function over(el: SVGPolygonElement | SVGPathElement | SVGCircleElement) {
@@ -198,10 +199,10 @@ function panzoom() {
   var panning = false;
 
   airspace.contentWindow.document.addEventListener("wheel", zoom);
-  airspace.contentWindow.document.addEventListener("mousedown", startDrag);
-  airspace.contentWindow.document.addEventListener("mousemove", drag);
-  airspace.contentWindow.document.addEventListener("mouseup", endDrag);
-  airspace.contentWindow.document.addEventListener("mouseleave", endDrag);
+  airspace.contentWindow.document.addEventListener("pointerdown", startDrag);
+  airspace.contentWindow.document.addEventListener("pointermove", drag);
+  airspace.contentWindow.document.addEventListener("pointerup", endDrag);
+  airspace.contentWindow.document.addEventListener("pointerleave", endDrag);
 
   function startDrag(evt) {
     panning = true;
