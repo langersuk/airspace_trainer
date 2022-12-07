@@ -1,8 +1,8 @@
-const airspace = document.querySelector("object#airspace");
-const uk = document.querySelector("object#uk");
+var airspace = document.querySelector("object#airspace");
+var uk = document.querySelector("object#uk");
 var elements;
 /**SVG is not available until the window has loaded */
-window.onload = () => {
+window.onload = function () {
     airspace.contentWindow.document.querySelector('svg').style.touchAction = "none";
     elements = airspace.contentWindow.document.querySelectorAll("polygon, path, circle");
     showTooltip();
@@ -13,14 +13,14 @@ window.onload = () => {
     getVersion();
 };
 function getVersion() {
-    const cycle = airspace.contentWindow.document
+    var cycle = airspace.contentWindow.document
         .querySelector("svg")
         .getAttribute("data-cycle");
-    const expirationDate = +airspace.contentWindow.document
+    var expirationDate = +airspace.contentWindow.document
         .querySelector("svg")
         .getAttribute("data-date");
-    document.querySelector("#version>h2").textContent = `v:${cycle}`;
-    let colour;
+    document.querySelector("#version>h2").textContent = "v:".concat(cycle);
+    var colour;
     if (expirationDate > Date.now() / 1000) {
         colour = "rgba(0,255,0,0.5)";
     }
@@ -32,14 +32,15 @@ function getVersion() {
     }
     document
         .querySelector("#version>h2")
-        .setAttribute("style", `background: ${colour}`);
+        .setAttribute("style", "background: ".concat(colour));
 }
 function hideTDA597() {
     airspace.contentWindow.document.getElementById("EGD597").remove();
 }
 /**Overlay toggle */
-const overlays = document.querySelectorAll("#options > div > input");
-for (const overlay of overlays) {
+var overlays = document.querySelectorAll("#options > div > input");
+for (var _i = 0, overlays_1 = overlays; _i < overlays_1.length; _i++) {
+    var overlay = overlays_1[_i];
     overlay.addEventListener("input", toggleOverlay);
 }
 function toggleOverlay(e) {
@@ -47,7 +48,7 @@ function toggleOverlay(e) {
         e.target.checked ? "" : "none";
 }
 function toggleCDR(e) {
-    for (const el of [
+    for (var _i = 0, _a = [
         "TAY CTA SECTOR 3",
         "TAY CTA SECTOR 4",
         "TAY CTA SECTOR 5",
@@ -87,7 +88,8 @@ function toggleCDR(e) {
         "IRISH SEA CTA SECTOR 4",
         "IRISH SEA CTA SECTOR 6",
         "IRISH SEA CTA SECTOR 7",
-    ]) {
+    ]; _i < _a.length; _i++) {
+        var el = _a[_i];
         airspace.contentWindow.document.getElementById(el).style.display = e.target
             .checked
             ? ""
@@ -95,7 +97,7 @@ function toggleCDR(e) {
     }
 }
 /**Height selector */
-const rangeSlider = document.querySelector("#rs-range-line");
+var rangeSlider = document.querySelector("#rs-range-line");
 rangeSlider.addEventListener("input", updateValue);
 rangeSlider.addEventListener("input", showSliderValue);
 document.addEventListener("keydown", onKeyDown);
@@ -124,8 +126,9 @@ function showSliderValue() {
             "px";
 }
 function updateValue() {
-    const height = +rangeSlider.value;
-    for (const el of elements) {
+    var height = +rangeSlider.value;
+    for (var _i = 0, elements_1 = elements; _i < elements_1.length; _i++) {
+        var el = elements_1[_i];
         if (el.dataset.min && el.dataset.max) {
             if (+el.dataset.min > height || +el.dataset.max < height) {
                 el.setAttribute("display", "none");
@@ -139,20 +142,24 @@ function updateValue() {
 /**Mouse-over tooltip */
 function showTooltip() {
     var tooltip = document.getElementById("tooltip");
-    for (const el of elements) {
+    var _loop_1 = function (el) {
         el.addEventListener("pointerover", function () {
             over(el);
         });
         el.addEventListener("pointermove", move);
         el.addEventListener("pointerout", out);
+    };
+    for (var _i = 0, elements_2 = elements; _i < elements_2.length; _i++) {
+        var el = elements_2[_i];
+        _loop_1(el);
     }
     function over(el) {
-        let fillin = "\n";
-        if (el.dataset.class) {
-            fillin = `${fillin}Class: ${el.dataset.class}\n`;
+        var fillin = "\n";
+        if (el.dataset["class"]) {
+            fillin = "".concat(fillin, "Class: ").concat(el.dataset["class"], "\n");
         }
         if (el.dataset.type) {
-            fillin = `${fillin}Type: ${el.dataset.type}\n`;
+            fillin = "".concat(fillin, "Type: ").concat(el.dataset.type, "\n");
         }
         tooltip.style.opacity = "0.6";
         tooltip.innerText =
@@ -161,8 +168,8 @@ function showTooltip() {
         }
     }
     function move(e) {
-        tooltip.style.left = `${Math.max(0, e.pageX - 150)}px`;
-        tooltip.style.top = `${e.pageY}px`;
+        tooltip.style.left = "".concat(Math.max(0, e.pageX - 150), "px");
+        tooltip.style.top = "".concat(e.pageY, "px");
     }
     function out() {
         tooltip.style.opacity = "0";
@@ -232,7 +239,7 @@ function panzoom() {
         var CTM = svgAirspace.getScreenCTM();
         return {
             x: (evt.clientX - CTM.e) / CTM.a,
-            y: (evt.clientY - CTM.f) / CTM.d,
+            y: (evt.clientY - CTM.f) / CTM.d
         };
     }
     // function pan(dx, dy) {
@@ -243,7 +250,7 @@ function panzoom() {
     //   matrixGroupUK.setAttributeNS(null, "transform", newMatrix);
     // }
     function zoom(evt) {
-        const scale = evt.deltaY < 0 ? 1.25 : 0.8;
+        var scale = evt.deltaY < 0 ? 1.25 : 0.8;
         for (var i = 0; i < 4; i++) {
             transformMatrix[i] *= scale;
         }
@@ -255,10 +262,10 @@ function panzoom() {
         svgUK.setAttributeNS(null, "transform", newMatrix);
     }
     /**Manual Zoom selector */
-    const zoomIn = document.querySelector("#zoom-in");
+    var zoomIn = document.querySelector("#zoom-in");
     zoomIn.addEventListener("click", zoomin);
     function zoomin() {
-        const scale = 1.25;
+        var scale = 1.25;
         for (var i = 0; i < 4; i++) {
             transformMatrix[i] *= scale;
         }
@@ -266,10 +273,10 @@ function panzoom() {
         svgAirspace.setAttributeNS(null, "transform", newMatrix);
         svgUK.setAttributeNS(null, "transform", newMatrix);
     }
-    const zoomOut = document.querySelector("#zoom-out");
+    var zoomOut = document.querySelector("#zoom-out");
     zoomOut.addEventListener("click", zoomout);
     function zoomout() {
-        const scale = 0.8;
+        var scale = 0.8;
         for (var i = 0; i < 4; i++) {
             transformMatrix[i] *= scale;
         }
