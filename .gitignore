@@ -7,7 +7,6 @@ yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
 
-*.zip
 # Firebase cache
 .firebase/
 
@@ -67,8 +66,5 @@ node_modules/
 .env
 
 .venv~
-<<<<<<< HEAD
 
 DAFIFUK_ED_8-1.zip
-=======
->>>>>>> f336578... Jan DAFIF
